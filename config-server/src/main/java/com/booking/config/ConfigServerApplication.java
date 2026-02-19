@@ -1,4 +1,4 @@
-package com.justlife.config;
+package com.booking.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
