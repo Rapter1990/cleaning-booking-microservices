@@ -1,10 +1,380 @@
 {
   "info": {
-    "_postman_id": "745a0386-5cba-412a-afc6-71c9cffa9ec8",
+    "_postman_id": "175fbb26-cff7-46c4-a2b2-8c90eb45f1c2",
     "name": "Cleaning Booking Microservices (via API Gateway :8080)",
+    "description": "Requests for BOOKING-SERVICE and PROFESSIONALS-SERVICE routed through API-GATEWAY (http://localhost:8080).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Requests for BOOKING-SERVICE and PROFESSIONALS-SERVICE routed through API-GATEWAY (http://localhost:8080)."
+    "_exporter_id": "33002673"
   },
+  "item": [
+    {
+      "name": "OpenAPI Docs (via Gateway)",
+      "item": [
+        {
+          "name": "Professionals OpenAPI JSON",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/professionals/v3/api-docs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "professionals",
+                "v3",
+                "api-docs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Booking OpenAPI JSON",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/booking/v3/api-docs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "booking",
+                "v3",
+                "api-docs"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PROFESSIONALS-SERVICE (via Gateway)",
+      "item": [
+        {
+          "name": "List Vehicles (sets vehicleId/cleanerId)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "if (Array.isArray(data) && data.length > 0) {",
+                  "  pm.collectionVariables.set(\"vehicleId\", data[0].id);",
+                  "  if (data[0].cleaners && data[0].cleaners.length > 0) {",
+                  "    pm.collectionVariables.set(\"cleanerId\", data[0].cleaners[0].id);",
+                  "  }",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/professionals/vehicles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "professionals",
+                "vehicles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List All Cleaners",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/professionals/cleaners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "professionals",
+                "cleaners"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Cleaners by Vehicle (uses {{vehicleId}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/professionals/vehicles/{{vehicleId}}/cleaners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "professionals",
+                "vehicles",
+                "{{vehicleId}}",
+                "cleaners"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "BOOKING-SERVICE (via Gateway)",
+      "item": [
+        {
+          "name": "Availability by Date (date={{date}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/availability?date={{date}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "availability"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "{{date}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Availability for Slot (startAt={{startAt}}, durationHours={{durationHours}}, professionalCount={{professionalCount}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/availability/slot?startAt={{startAt}}&durationHours={{durationHours}}&professionalCount={{professionalCount}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "availability",
+                "slot"
+              ],
+              "query": [
+                {
+                  "key": "startAt",
+                  "value": "{{startAt}}"
+                },
+                {
+                  "key": "durationHours",
+                  "value": "{{durationHours}}"
+                },
+                {
+                  "key": "professionalCount",
+                  "value": "{{professionalCount}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking (sets bookingId + vehicleId)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "const b = pm.response.json();",
+                  "if (b && b.id) pm.collectionVariables.set(\"bookingId\", b.id);",
+                  "if (b && b.vehicleId) pm.collectionVariables.set(\"vehicleId\", b.vehicleId);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startAt\": \"{{startAt}}\",\n  \"durationHours\": 2,\n  \"professionalCount\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Booking (uses {{bookingId}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newStartAt\": \"{{newStartAt}}\",\n  \"newDurationHours\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "{{bookingId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API Gateway (optional)",
+      "item": [
+        {
+          "name": "Gateway Routes (actuator)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/gateway/routes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "gateway",
+                "routes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Gateway Health (actuator)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
   "variable": [
     {
       "key": "baseUrl",
@@ -55,362 +425,6 @@
       "key": "bookingId",
       "value": "",
       "type": "string"
-    }
-  ],
-  "item": [
-    {
-      "name": "OpenAPI Docs (via Gateway)",
-      "item": [
-        {
-          "name": "Professionals OpenAPI JSON",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/professionals/v3/api-docs",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "professionals",
-                "v3",
-                "api-docs"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Booking OpenAPI JSON",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/booking/v3/api-docs",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "booking",
-                "v3",
-                "api-docs"
-              ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "PROFESSIONALS-SERVICE (via Gateway)",
-      "item": [
-        {
-          "name": "List Vehicles (sets vehicleId/cleanerId)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/professionals/vehicles",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "professionals",
-                "vehicles"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
-                  "const data = pm.response.json();",
-                  "if (Array.isArray(data) && data.length > 0) {",
-                  "  pm.collectionVariables.set(\"vehicleId\", data[0].id);",
-                  "  if (data[0].cleaners && data[0].cleaners.length > 0) {",
-                  "    pm.collectionVariables.set(\"cleanerId\", data[0].cleaners[0].id);",
-                  "  }",
-                  "}",
-                  ""
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "List All Cleaners",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/professionals/cleaners",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "professionals",
-                "cleaners"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "List Cleaners by Vehicle (uses {{vehicleId}})",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/professionals/vehicles/{{vehicleId}}/cleaners",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "professionals",
-                "vehicles",
-                "{{vehicleId}}",
-                "cleaners"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "BOOKING-SERVICE (via Gateway)",
-      "item": [
-        {
-          "name": "Availability by Date (date={{date}})",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/availability?date={{date}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "availability"
-              ],
-              "query": [
-                {
-                  "key": "date",
-                  "value": "{{date}}"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Availability for Slot (startAt={{startAt}}, durationHours={{durationHours}}, professionalCount={{professionalCount}})",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/availability/slot?startAt={{startAt}}&durationHours={{durationHours}}&professionalCount={{professionalCount}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "availability",
-                "slot"
-              ],
-              "query": [
-                {
-                  "key": "startAt",
-                  "value": "{{startAt}}"
-                },
-                {
-                  "key": "durationHours",
-                  "value": "{{durationHours}}"
-                },
-                {
-                  "key": "professionalCount",
-                  "value": "{{professionalCount}}"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Create Booking (sets bookingId + vehicleId)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/bookings",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "bookings"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"startAt\": \"{{startAt}}\",\n  \"durationHours\": 2,\n  \"professionalCount\": 2\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
-                  "const b = pm.response.json();",
-                  "if (b && b.id) pm.collectionVariables.set(\"bookingId\", b.id);",
-                  "if (b && b.vehicleId) pm.collectionVariables.set(\"vehicleId\", b.vehicleId);",
-                  ""
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Update Booking (uses {{bookingId}})",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "bookings",
-                "{{bookingId}}"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"newStartAt\": \"{{newStartAt}}\",\n  \"newDurationHours\": 2\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "API Gateway (optional)",
-      "item": [
-        {
-          "name": "Gateway Routes (actuator)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/actuator/gateway/routes",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "actuator",
-                "gateway",
-                "routes"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Gateway Health (actuator)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/actuator/health",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "actuator",
-                "health"
-              ]
-            }
-          }
-        }
-      ]
     }
   ]
 }
