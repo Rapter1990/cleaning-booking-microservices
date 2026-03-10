@@ -1,15 +1,16 @@
 package com.booking.professionalservice.service;
 
+import com.booking.common.model.dto.request.CustomPagingRequest;
+import com.booking.common.model.pagination.CustomPage;
 import com.booking.professionalservice.model.dto.request.CleanerDto;
 import com.booking.professionalservice.model.dto.request.VehicleDto;
 
-import java.util.List;
-
 public interface ProfessionalsService {
 
-  List<VehicleDto> listVehicles();
+  CustomPage<VehicleDto> listVehicles(CustomPagingRequest pagingRequest);
 
-  List<CleanerDto> listAllCleaners();
+  CustomPage<CleanerDto> listAllCleaners(CustomPagingRequest pagingRequest);
 
-  List<CleanerDto> listCleanersByVehicle(String vehicleId);
+  CustomPage<CleanerDto> listCleanersByVehicle(String vehicleId, CustomPagingRequest pagingRequest);
+
 }
