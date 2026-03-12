@@ -1,8 +1,8 @@
 package com.booking.common.model.dto.response;
 
 import com.booking.common.model.pagination.CustomPage;
-import lombok.Builder;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,8 +13,12 @@ import java.util.List;
  * @param <T> the type of content returned in the page
  */
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class CustomPagingResponse<T> {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CustomPagingResponse<T> implements Serializable {
 
     private List<T> content;
 
