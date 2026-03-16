@@ -45,4 +45,5 @@ public class KafkaTemplateConfig {
     DefaultKafkaProducerFactory<Object, Object> pf = new DefaultKafkaProducerFactory<>(config);
     return new KafkaTemplate<>(pf);
   }
+
 }
