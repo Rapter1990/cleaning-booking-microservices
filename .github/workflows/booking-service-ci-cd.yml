@@ -16,10 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    defaults:
-      run:
-        working-directory: ./booking-service
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -30,10 +26,15 @@ jobs:
           distribution: temurin
           java-version: '25'
           cache: maven
-          cache-dependency-path: booking-service/pom.xml
+          cache-dependency-path: |
+            common/pom.xml
+            booking-service/pom.xml
 
-      - name: Run tests
-        run: mvn -B clean verify
+      - name: Install common module
+        run: mvn -B -f common/pom.xml clean install -DskipTests
+
+      - name: Run booking-service tests
+        run: mvn -B -f booking-service/pom.xml clean verify
 
   build-and-push:
     name: Build & Push Booking Service Docker Image
@@ -41,10 +42,6 @@ jobs:
     needs: test
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    defaults:
-      run:
-        working-directory: ./booking-service
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -55,10 +52,15 @@ jobs:
           distribution: temurin
           java-version: '25'
           cache: maven
-          cache-dependency-path: booking-service/pom.xml
+          cache-dependency-path: |
+            common/pom.xml
+            booking-service/pom.xml
 
-      - name: Package application
-        run: mvn -B clean package -DskipTests
+      - name: Install common module
+        run: mvn -B -f common/pom.xml clean install -DskipTests
+
+      - name: Package booking-service
+        run: mvn -B -f booking-service/pom.xml clean package -DskipTests
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
