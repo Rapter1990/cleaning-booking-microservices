@@ -16,10 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    defaults:
-      run:
-        working-directory: ./professional-service
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -30,10 +26,15 @@ jobs:
           distribution: temurin
           java-version: '25'
           cache: maven
-          cache-dependency-path: professional-service/pom.xml
+          cache-dependency-path: |
+            common/pom.xml
+            professional-service/pom.xml
 
-      - name: Run tests
-        run: mvn -B clean verify
+      - name: Install common module
+        run: mvn -B -f common/pom.xml clean install -DskipTests
+
+      - name: Run professional-service tests
+        run: mvn -B -f professional-service/pom.xml clean verify
 
   build-and-push:
     name: Build & Push Professional Service Docker Image
@@ -41,10 +42,6 @@ jobs:
     needs: test
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    defaults:
-      run:
-        working-directory: ./professional-service
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -55,10 +52,15 @@ jobs:
           distribution: temurin
           java-version: '25'
           cache: maven
-          cache-dependency-path: professional-service/pom.xml
+          cache-dependency-path: |
+            common/pom.xml
+            professional-service/pom.xml
 
-      - name: Package application
-        run: mvn -B clean package -DskipTests
+      - name: Install common module
+        run: mvn -B -f common/pom.xml clean install -DskipTests
+
+      - name: Package professional-service
+        run: mvn -B -f professional-service/pom.xml clean package -DskipTests
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -69,7 +71,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: ./professional-service
+          context: .
           file: ./professional-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/cleaning-booking-microservices-professional-service:latest
